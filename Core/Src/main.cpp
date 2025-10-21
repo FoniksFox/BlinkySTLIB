@@ -1,22 +1,14 @@
-#ifndef SIM_ON
-#include "main.h"
-
-#include "lwip.h"
-#endif
-
 #include "ST-LIB.hpp"
 
 int main(void) {
-#ifdef SIM_ON
-    SharedMemory::start();
-#endif
-
-    DigitalOutput led_on(PB1);
-    STLIB::start();
-
-    Time::register_low_precision_alarm(5, [&]() { led_on.toggle(); 
+    DigitalOutput led(PB0);
+    Time::register_low_precision_alarm(1000, [&led]() {
+        led.toggle();
     });
 
+    STLIB::start();
+    led.turn_on();
+    
     while (1) {
         STLIB::update();
     }
